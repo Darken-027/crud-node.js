@@ -1,3 +1,12 @@
 # CRUD con Node.js
 
-gi
+## Intalacion
+
+```shell
+npm install
+```
+
+## Ejecutar
+```shell
+npm run dev
+```

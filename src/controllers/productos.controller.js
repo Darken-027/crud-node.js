@@ -5,7 +5,7 @@ const index = (req, res) => {
 
     fetch("https://fakestoreapi.com/products?" + query)
         .then((response) => response.json())
-        .then((productos) => res.send(productos));
+        .then((productos) => res.render('productos', {productos }));
 };
 
 const show = (req, res) => {

@@ -1,21 +1,10 @@
 const express = require("express");
 const router = express.Router();
 
-const querystring = require("querystring");
+const controller = require('../controllers/productos.controller');
 
-router.get("/", (req, res) => {
-    const query = querystring.stringify(req.query);
-
-    fetch("https://fakestoreapi.com/products?" + query)
-        .then((response) => response.json())
-        .then((productos) => res.send(productos));
-});
-
-router.get("/:id", (req, res) => {
-    fetch("https://fakestoreapi.com/products/" + req.params.id)
-        .then((response) => response.json())
-        .then((productos) => res.json(productos));
-});
+router.get("/", controller.index);
+router.get("/:id", controller.show);
 
 module.exports = router;
     

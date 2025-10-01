@@ -3,12 +3,17 @@ require("dotenv").config();
 const express = require('express');
 const app = express();
 
+const layout = require('express-ejs-layouts');
+
 const path = require("path");
 
 app.use(express.static(path.join(__dirname, "public")));
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'src/views'));
+
+app.use(layout);
+app.set('layout', 'layouts/layout');
 
 const mainRouter = require('./src/routes/main.routes');
 app.use(mainRouter);

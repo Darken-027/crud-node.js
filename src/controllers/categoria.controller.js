@@ -9,7 +9,7 @@ const create = (req, res) => {
 };
 
 const store = (req, res) => {
-    const { nombre } = req.body;
+    const { nombre } = req.body; 
 
     const categoria = {
         id: Date.now(),
@@ -38,10 +38,9 @@ const show = (req, res) => {
 };
 
 const edit = (req, res) => {
-    const { id } = req.params;
+    const { id } = req.params
     
-    const categoria = categorias.find((categoria) => categoria.id == categoria.id);
-
+    const categoria = categorias.find((categoria) => categoria.id == id); 
     if(!categoria) {
         return res.status(404).send("No existe la categoria");
     };
@@ -49,10 +48,26 @@ const edit = (req, res) => {
     res.render("categorias/edit", { categoria });   
 }
 
-module.exports = {
+const update = (req, res) => {
+    const { id } = req.params;
+    const { nombre } = req.body;
+
+    const categoria = categorias.find((categoria) => categoria.id == id); 
+
+    if(!categoria) {
+        return res.status(404).send("No existe la categoria");
+    };
+
+    categoria.nombre = nombre;
+
+    res.redirect("/categorias");
+};
+
+module.exports = { 
     create,
     store,
     index,
     show,
     edit,
+    update,
 };

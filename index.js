@@ -20,6 +20,7 @@ app.set('layout', 'layouts/layout');
 const mainRouter = require('./src/routes/main.routes');
 app.use(mainRouter);
 
+app.use('/categorias', require('./src/routes/categorias.router'));
 app.use('/productos', require('./src/routes/productos.router'));
 app.use('/contacto', require('./src/routes/contacto.router'));
 

@@ -1,0 +1,22 @@
+<h1>Listado de Categorias</h1>
+<a href="/categorias/create">Crear una categoria</a>
+
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <% categorias.forEach(categoria => { %>
+            <tr>
+                <td><a href="/categorias/<%= categoria.nombre %>"><%= categoria.nombre %></a></td>
+                <td>
+                    <a href="/categorias/<%= categoria.nombre %>/edit">Edit</a>
+                </td>
+            </tr>
+        <% }) %>
+    </tbody>
+</table>

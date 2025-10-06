@@ -1,8 +1,7 @@
-const categorias = [
-    {id: 1, nombre: "Categoria 1"},
-    {id: 2, nombre: "Categoria 2"},
-    {id: 3, nombre: "Categoria 3"},
-];
+const fs = require("fs");
+const path = require("path");
+
+let categorias = [];
 
 const create = (req, res) => {
     res.render("categorias/create");
@@ -17,18 +16,33 @@ const store = (req, res) => {
     };
 
     categorias.push(categoria);
+    
+    fs.writeFileSync(
+        path.resolve(__dirname, "../../categorias.json"), 
+    JSON.stringify(categorias)
+    );
 
     res.redirect("/categorias");
 };
 
 const index = (req, res) => {
+    categorias = JSON.parce(
+        fs.readFileSinc(
+        path.resolve(__dirname, "../../categorias.json"), 'utf-8')
+    );
+
     res.render("categorias/index", { categorias });
 };
 
 const show = (req, res) => {
+    categorias = JSON.parce(
+        fs.readFileSinc(
+        path.resolve(__dirname, "../../categorias.json"), 'utf-8')
+    );
+
     const {id} = req.params;
 
-    const categoria = categorias.find((categoria) => categoria.id == categoria.id);
+    const categoria = categorias.find((categoria) => categoria.id == id);
 
     if(!categoria) {
         return res.status(404).send("No existe la categoria");
@@ -38,6 +52,11 @@ const show = (req, res) => {
 };
 
 const edit = (req, res) => {
+    categorias = JSON.parce(
+        fs.readFileSinc(
+        path.resolve(__dirname, "../../categorias.json"), 'utf-8')
+    );
+
     const { id } = req.params
     
     const categoria = categorias.find((categoria) => categoria.id == id); 
@@ -49,6 +68,11 @@ const edit = (req, res) => {
 }
 
 const update = (req, res) => {
+    categorias = JSON.parce(
+        fs.readFileSinc(
+        path.resolve(__dirname, "../../categorias.json"), 'utf-8')
+    );
+
     const { id } = req.params;
     const { nombre } = req.body;
 
@@ -60,6 +84,35 @@ const update = (req, res) => {
 
     categoria.nombre = nombre;
 
+    fs.writeFileSync(
+        path.resolve(__dirname, "../../categorias.json"), 
+    JSON.stringify(categorias)
+    );
+
+    res.redirect("/categorias");
+};
+
+const destroy = (req, res) => {
+    categorias = JSON.parce(
+        fs.readFileSinc(
+        path.resolve(__dirname, "../../categorias.json"), 'utf-8')
+    );
+
+    const { id } = req.params;
+    
+    const index = categorias.findIndex((categoria) => categoria.id == id);
+    
+    if(index == -1) {
+        return res.status(404).send("No existe la categoria");
+    }
+
+    categorias.splice(index, 1);
+
+    fs.writeFileSync(
+        path.resolve(__dirname, "../../categorias.json"), 
+    JSON.stringify(categorias)
+    );
+    
     res.redirect("/categorias");
 };
 
@@ -70,4 +123,5 @@ module.exports = {
     show,
     edit,
     update,
+    destroy,
 };

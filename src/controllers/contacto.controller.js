@@ -1,11 +1,11 @@
 const nodemailer = require("nodemailer");
 
 const index = (req, res) => {
-    res.render("contacto");
+    res.render("conctacto");
 };
 
 const submit = async(req, res) => {
-    console.log(req.body);
+    console.log(req.body); 
 
     const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
@@ -13,7 +13,7 @@ const submit = async(req, res) => {
     auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS
-  },
+    },
 });
 
 
@@ -35,5 +35,5 @@ try {
 
 module.exports = {
     index,
-    submit
+    submit,
 }

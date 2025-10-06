@@ -2,7 +2,7 @@
 <a href="/categorias/create">Crear una categoria</a>
 
 
-<table border="1">
+<table>
     <thead>
         <tr>
             <th>Nombre</th>
@@ -14,9 +14,27 @@
             <tr>
                 <td><a href="/categorias/<%= categoria.id %>"><%= categoria.nombre %></a></td>
                 <td>
-                    <a href="/categorias/<%= categoria.id %>/edit">Edit</a>
+                    <a href="/categorias/<%= categoria.id %>/edit">Edit</a> |
+
+                    <form 
+                    class="form-dele" action="/categorias/<%= categoria.id %>?_method=DELETE" 
+                    method="post">
+                        <button type="submit">Borrar</button>
+                    </form>
                 </td>
             </tr>
         <% }) %>
     </tbody>
+
+    <script>
+        document.addEventListener("submit", (event) => {
+            event.preventDefault();
+
+            if(event.target.classList.contains("form-delete")){
+                if(confirm("Estas seguro ?")){
+                    event.target.submit();
+                }
+            }
+        });
+    </script>
 </table>

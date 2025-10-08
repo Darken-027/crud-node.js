@@ -26,17 +26,23 @@ const store = (req, res) => {
 };
 
 const index = (req, res) => {
-    categorias = JSON.parce(
-        fs.readFileSinc(
+try {
+        categorias = JSON.parse(
+        fs.readFileSync(
         path.resolve(__dirname, "../../categorias.json"), 'utf-8')
     );
+} catch (error) {
+    categorias = [];
+}
+
+
 
     res.render("categorias/index", { categorias });
 };
 
 const show = (req, res) => {
-    categorias = JSON.parce(
-        fs.readFileSinc(
+            categorias = JSON.parse(
+        fs.readFileSync(
         path.resolve(__dirname, "../../categorias.json"), 'utf-8')
     );
 
@@ -52,8 +58,8 @@ const show = (req, res) => {
 };
 
 const edit = (req, res) => {
-    categorias = JSON.parce(
-        fs.readFileSinc(
+            categorias = JSON.parse(
+        fs.readFileSync(
         path.resolve(__dirname, "../../categorias.json"), 'utf-8')
     );
 
@@ -68,8 +74,8 @@ const edit = (req, res) => {
 }
 
 const update = (req, res) => {
-    categorias = JSON.parce(
-        fs.readFileSinc(
+            categorias = JSON.parse(
+        fs.readFileSync(
         path.resolve(__dirname, "../../categorias.json"), 'utf-8')
     );
 
@@ -93,8 +99,8 @@ const update = (req, res) => {
 };
 
 const destroy = (req, res) => {
-    categorias = JSON.parce(
-        fs.readFileSinc(
+            categorias = JSON.parse(
+        fs.readFileSync(
         path.resolve(__dirname, "../../categorias.json"), 'utf-8')
     );
 
@@ -124,4 +130,4 @@ module.exports = {
     edit,
     update,
     destroy,
-};
+}; 

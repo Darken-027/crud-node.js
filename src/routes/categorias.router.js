@@ -13,5 +13,7 @@ router.get("/:id", controller.show);
 router.get("/:id/edit", controller.edit);
 router.put("/:id", controller.update); 
 
+router.delete("/:id", controller.destroy);
 
-module.exports = router; 
+
+module.exports = router;   

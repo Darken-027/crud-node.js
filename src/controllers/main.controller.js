@@ -1,15 +1,15 @@
-const path = require("path")
+const path = require("path");
 
 const index = (req, res) => {
-    res.render("index");
+  res.render("index");
 };
 
 const private = (req, res) => {
-    //console.log(__dirname);
-    res.sendFile(path.resolve(__dirname, "../../private/index.htm"));
+  // console.log(__dirname)
+  res.sendFile(path.resolve(__dirname, "../../private/index.html"));
 };
 
 module.exports = {
-    index,
-    private
-}
+  index,
+  private,
+};

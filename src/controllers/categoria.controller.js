@@ -1,124 +1,100 @@
-const fs = require("fs");
-const path = require("path");
-
-let categorias = [];
-
-const model = require("../models/category");
+const model = require("../models/Category");
 
 const create = (req, res) => {
-    res.render("categorias/create");
+  res.render("categorias/create");
 };
 
-const store = (req, res) => {
-    const { name } = req.body; 
+const store = async (req, res) => {
+  const { name } = req.body;
 
-    model.create(name, (error, id) => {
-        if(error){
+  try {
+    const categoria = await model.create({ name });
+    console.log(categoria);
 
-            return res.status(500).send("Internal Server Error")
-        }
-
-        console.log(id);
-
-        res.redirect("/categorias");
-    })
-
+    res.redirect("/categorias");
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send("Internal Server Error");
+  }
 };
 
-const index = (req, res) => {
-    model.findAll((error, categorias) => {
-        if(error){
-            return res.status(500).send("Internal Server Error");
-        }
-        res.render("categorias/index", { categorias });
-    });
+const index = async (req, res) => {
+  try {
+    const categorias = await model.findAll();
+    res.render("categorias/index", { categorias });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send("Internal Server Error");
+  }
 };
 
-const show = (req, res) => {
-        const {id} = req.params;
+const show = async (req, res) => {
+  const { id } = req.params;
 
-    model.findById(id, (error, categoria) => {
-                if(error){
-            return res.status(500).send("Internal Server Error");
-        }
-            if(!categoria) {
-        return res.status(404).send("No existe la categoria");
+  try {
+    const categoria = await model.findByPk(id);
+    console.log(categoria);
+
+    if (!categoria) {
+      return res.status(404).send("No existe la categoría");
     }
+
     res.render("categorias/show", { categoria });
-    });
-    
+  } catch (error) {
+    return res.status(500).send("Internal Server Error");
+  }
 };
 
-const edit = (req, res) => {
+const edit = async (req, res) => {
+  const { id } = req.params;
 
-    const { id } = req.params
-    
-    model.findById(id, (error, categoria) => {
-                if(error){
-            return res.status(500).send("Internal Server Error");
-        }
-            if(!categoria) {
-        return res.status(404).send("No existe la categoria");
+  try {
+    const categoria = await model.findByPk(id);
+    console.log(categoria);
+
+    if (!categoria) {
+      return res.status(404).send("No existe la categoría");
     }
+
     res.render("categorias/edit", { categoria });
-    });   
-}
-
-const update = (req, res) => {
-            categorias = JSON.parse(
-        fs.readFileSync(
-        path.resolve(__dirname, "../../categorias.json"), 'utf-8')
-    );
-
-    const { id } = req.params;
-    const { nombre } = req.body;
-
-    const categoria = categorias.find((categoria) => categoria.id == id); 
-
-    if(!categoria) {
-        return res.status(404).send("No existe la categoria");
-    };
-
-    categoria.nombre = nombre;
-
-    fs.writeFileSync(
-        path.resolve(__dirname, "../../categorias.json"), 
-    JSON.stringify(categorias)
-    );
-
-    res.redirect("/categorias");
+  } catch (error) {
+    return res.status(500).send("Internal Server Error");
+  }
 };
 
-const destroy = (req, res) => {
-            categorias = JSON.parse(
-        fs.readFileSync(
-        path.resolve(__dirname, "../../categorias.json"), 'utf-8')
-    );
+const update = async (req, res) => {
+  const { id } = req.params;
+  const { name } = req.body;
 
-    const { id } = req.params;
-    
-    const index = categorias.findIndex((categoria) => categoria.id == id);
-    
-    if(index == -1) {
-        return res.status(404).send("No existe la categoria");
-    }
+  try {
+    const result = await model.update({ name }, { where: { id } });
+    console.log(result);
 
-    categorias.splice(index, 1);
-
-    fs.writeFileSync(
-        path.resolve(__dirname, "../../categorias.json"), 
-    JSON.stringify(categorias)
-    );
-    
     res.redirect("/categorias");
+  } catch (error) {
+    return res.status(500).send("Internal Server Error");
+  }
 };
 
-module.exports = { 
-    create,
-    store,
-    index,
-    show,
-    edit,
-    update,
-    destroy,
-};  
+const destroy = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const result = await model.destroy({ where: { id } });
+    console.log(result);
+
+    res.redirect("/categorias");
+  } catch (error) {
+    return res.status(500).send("Internal Server Error");
+  }
+};
+
+module.exports = {
+  create,
+  store,
+  index,
+  show,
+  edit,
+  update,
+  destroy,
+};

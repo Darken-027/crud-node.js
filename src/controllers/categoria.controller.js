@@ -3,74 +3,65 @@ const path = require("path");
 
 let categorias = [];
 
+const model = require("../models/category");
+
 const create = (req, res) => {
     res.render("categorias/create");
 };
 
 const store = (req, res) => {
-    const { nombre } = req.body; 
+    const { name } = req.body; 
 
-    const categoria = {
-        id: Date.now(),
-        nombre,
-    };
+    model.create(name, (error, id) => {
+        if(error){
 
-    categorias.push(categoria);
-    
-    fs.writeFileSync(
-        path.resolve(__dirname, "../../categorias.json"), 
-    JSON.stringify(categorias)
-    );
+            return res.status(500).send("Internal Server Error")
+        }
 
-    res.redirect("/categorias");
+        console.log(id);
+
+        res.redirect("/categorias");
+    })
+
 };
 
 const index = (req, res) => {
-try {
-        categorias = JSON.parse(
-        fs.readFileSync(
-        path.resolve(__dirname, "../../categorias.json"), 'utf-8')
-    );
-} catch (error) {
-    categorias = [];
-}
-
-
-
-    res.render("categorias/index", { categorias });
+    model.findAll((error, categorias) => {
+        if(error){
+            return res.status(500).send("Internal Server Error");
+        }
+        res.render("categorias/index", { categorias });
+    });
 };
 
 const show = (req, res) => {
-            categorias = JSON.parse(
-        fs.readFileSync(
-        path.resolve(__dirname, "../../categorias.json"), 'utf-8')
-    );
+        const {id} = req.params;
 
-    const {id} = req.params;
-
-    const categoria = categorias.find((categoria) => categoria.id == id);
-
-    if(!categoria) {
+    model.findById(id, (error, categoria) => {
+                if(error){
+            return res.status(500).send("Internal Server Error");
+        }
+            if(!categoria) {
         return res.status(404).send("No existe la categoria");
-    };
-
+    }
     res.render("categorias/show", { categoria });
+    });
+    
 };
 
 const edit = (req, res) => {
-            categorias = JSON.parse(
-        fs.readFileSync(
-        path.resolve(__dirname, "../../categorias.json"), 'utf-8')
-    );
 
     const { id } = req.params
     
-    const categoria = categorias.find((categoria) => categoria.id == id); 
-    if(!categoria) {
+    model.findById(id, (error, categoria) => {
+                if(error){
+            return res.status(500).send("Internal Server Error");
+        }
+            if(!categoria) {
         return res.status(404).send("No existe la categoria");
-    };
-
-    res.render("categorias/edit", { categoria });   
+    }
+    res.render("categorias/edit", { categoria });
+    });   
 }
 
 const update = (req, res) => {
@@ -130,4 +121,4 @@ module.exports = {
     edit,
     update,
     destroy,
-}; 
+};  

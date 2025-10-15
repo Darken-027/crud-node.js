@@ -81,8 +81,6 @@ const destroy = async (req, res) => {
 
   try {
     const result = await model.destroy({ where: { id } });
-    console.log(result);
-
     res.redirect("/categorias");
   } catch (error) {
     return res.status(500).send("Internal Server Error");

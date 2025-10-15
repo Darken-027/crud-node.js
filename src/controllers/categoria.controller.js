@@ -1,4 +1,4 @@
-const model = require("../models/Category");
+const model = require("../models/Category").default;
 
 const create = (req, res) => {
   res.render("categorias/create");

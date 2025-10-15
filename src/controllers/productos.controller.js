@@ -1,29 +1,15 @@
-const path = require("path");
-const fs = require("fs");
-
-const sharp = require("sharp");
-
+const querystring = require("querystring");
 const model = require("../models/Product");
-const modelCategory = require("../models/Category");
 
-const create = async (req, res) => {
-  try {
-    const categorias = await modelCategory.findAll();
-
-    res.render("productos/create", { categorias });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).send("Internal Server Error");
-  }
+const create = (req, res) => {
+  res.render("productos/create");
 };
 
 const store = async (req, res) => {
-  const { name, categoryId } = req.body;
+  const { name } = req.body;
 
   try {
-    const image = await upload(req.file);
-
-    const result = await model.create({ name, image, categoryId });
+    const result = await model.store(name);
     console.log(result);
     res.redirect("/productos");
   } catch (error) {
@@ -34,9 +20,7 @@ const store = async (req, res) => {
 
 const index = async (req, res) => {
   try {
-    const productos = await model.findAll({
-      include: "category",
-    });
+    const productos = await model.findAll();
     res.render("productos/index", { productos });
   } catch (error) {
     console.log(error);
@@ -48,7 +32,7 @@ const show = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const producto = await model.findByPk(id);
+    const producto = await model.findById(id);
     console.log(producto);
     if (!producto) {
       return res.status(404).send("Producto no encontrado");
@@ -64,16 +48,12 @@ const edit = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const producto = await model.findByPk(id);
+    const producto = await model.findById(id);
     console.log(producto);
-
     if (!producto) {
       return res.status(404).send("Producto no encontrado");
     }
-
-    const categorias = await modelCategory.findAll();
-
-    res.render("productos/edit", { producto, categorias });
+    res.render("productos/edit", { producto });
   } catch (error) {
     console.log(error);
     return res.status(500).send("Internal Server Error");
@@ -82,30 +62,11 @@ const edit = async (req, res) => {
 
 const update = async (req, res) => {
   const { id } = req.params;
-  const { name, categoryId } = req.body;
-  // const { filename: image } = req.file;
+  const { name } = req.body;
 
   try {
-    const image = await upload(req.file);
-
-    const producto = await model.findByPk(id);
-
-    const result = await model.update(
-      { name, image, categoryId },
-      { where: { id } }
-    );
+    const result = await model.update(id, name);
     console.log(result);
-
-    if (producto.image) {
-      const imagePath = path.resolve(
-        __dirname,
-        "../../public/uploads",
-        producto.image
-      );
-
-      fs.unlinkSync(imagePath);
-    }
-
     res.redirect("/productos");
   } catch (error) {
     console.log(error);
@@ -117,27 +78,13 @@ const destroy = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const result = await model.destroy({ where: { id } });
+    const result = await model.destroy(id);
     console.log(result);
     res.redirect("/productos");
   } catch (error) {
     console.log(error);
     return res.status(500).send("Internal Server Error");
   }
-};
-
-const upload = async (file) => {
-  if (!file) {
-    return null;
-  }
-
-  const imageName = Date.now() + path.extname(file.originalname);
-
-  const imagePath = path.resolve(__dirname, "../../public/uploads", imageName);
-
-  await sharp(file.buffer).resize(300).toFile(imagePath);
-
-  return imageName;
 };
 
 module.exports = {

@@ -34,7 +34,7 @@ const show = async (req, res) => {
   try {
     const producto = await model.findById(id);
     console.log(producto);
-    if (!producto) {
+    if (!producto) {  
       return res.status(404).send("Producto no encontrado");
     }
     res.render("productos/show", { producto });

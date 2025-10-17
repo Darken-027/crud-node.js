@@ -23,7 +23,7 @@ const findAll = async () => {
 };
 
 const findById = async (id) => {
-  const sql = `SELECT * FROM products WHERE id = ?`;
+  const sql = `SELECT * FROM products WHERE id = ?`; 
 
   try {
     const [rows] = await pool.query(sql, [id]);

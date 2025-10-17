@@ -65,7 +65,7 @@ const update = async (req, res) => {
   const { name } = req.body;
 
   try {
-    const result = await model.update(id, name);
+    const result = await model.update(id, name); 
     console.log(result);
     res.redirect("/productos");
   } catch (error) {

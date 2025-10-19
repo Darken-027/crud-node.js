@@ -20,8 +20,8 @@ const store = async (req, res) => {
 
 const index = async (req, res) => {
   try {
-    const categoria = await model.findAll();
-    res.render("categorias/index", { categoria });
+    const categorias = await model.findAll();
+    res.render("categorias/index", { categorias });
   } catch (error) {
     console.log(error);
     return res.status(500).send("Internal Server Error");

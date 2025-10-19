@@ -18,10 +18,10 @@ app.use(express.static(path.join(__dirname, "public")));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'src/views'));
 
-app.use(layout);
+app.use(layouts);
 app.set('layout', 'layouts/layout');
 
-const mainRouter = require('./src/routes/main.routes');
+const mainRouter = require('./src/routes/main.router');
 app.use(mainRouter);
 
 app.use('/categorias', require('./src/routes/categorias.router'));

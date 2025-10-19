@@ -6,4 +6,4 @@ const controller = require("../controllers/main.controller");
 router.get("/", controller.index);
 router.get("/privada", controller.private);
 
-module.exports = router;
+module.exports = router; 

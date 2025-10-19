@@ -7,7 +7,7 @@ const app = express();
 const methodOverride = require("method-override"); 
 app.use(methodOverride("_method"));
 
-const layout = require('express-ejs-layouts');
+const layouts = require('express-ejs-layouts');
 
 const path = require("path");
 
@@ -19,9 +19,9 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'src/views'));
 
 app.use(layouts);
-app.set('layout', 'layouts/layout');
+app.set("layout", "layouts/layout");    
 
-const mainRouter = require('./src/routes/main.router');
+const mainRouter = require('./src/routes/main.routes');
 app.use(mainRouter);
 
 app.use('/categorias', require('./src/routes/categorias.router'));

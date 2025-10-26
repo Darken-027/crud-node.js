@@ -1,0 +1,23 @@
+const swaggerJSdoc = require('swagger-jsdoc');
+const swaggerUi = require("swagger-ui");
+
+// Metadata info abut our API
+const options = {
+    definition: {
+        openapi: "3.0.0",
+        info: { title: 'Crossfit WOB API', version: '1.0.0',},
+        apis: ['src/v1/routes/workoutes.js', 'src/database/Workout.js'] // files containing annotations as above
+    }
+};
+
+// DocS en JSON format
+const swaggerSpec = swaggerJSDoc(options);
+
+// Funtion to setup our docs
+const swaggerDocs = (app, port) => {
+    app.use('/api/v1/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec)); 
+    app.get('/api/v1/docs.json', (req, res) => {
+        res.setHeader('Content-Type', 'application/json');
+        res.send(swaggerSpec);
+    })
+};
